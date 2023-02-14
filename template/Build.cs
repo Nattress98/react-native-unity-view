@@ -7,7 +7,8 @@ using UnityEngine;
 using Application = UnityEngine.Application;
 using BuildResult = UnityEditor.Build.Reporting.BuildResult;
 
-public class Build : MonoBehaviour {
+public class Build : MonoBehaviour
+{
     static readonly string ProjectPath = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
 
     static readonly string apkPath = Path.Combine(ProjectPath, "Builds/" + Application.productName + ".apk");
@@ -19,28 +20,41 @@ public class Build : MonoBehaviour {
         Path.GetFullPath(Path.Combine(ProjectPath, "../../ios/UnityExport"));
 
     [MenuItem("ReactNative/Export Android (Unity 2019.3.*) %&n", false, 1)]
-    public static void DoBuildAndroidLibrary() {
+    public static void DoBuildAndroidLibrary()
+    {
         DoBuildAndroid(Path.Combine(apkPath, "unityLibrary"));
 
         Copy(Path.Combine(apkPath, "launcher/src/main/res"), Path.Combine(androidExportPath, "src/main/res"));
     }
 
     [MenuItem("ReactNative/Export Android legacy %&a", false, 2)]
-    public static void DoBuildAndroidLegacy() {
+    public static void DoBuildAndroidLegacy()
+    {
         DoBuildAndroid(Path.Combine(apkPath, Application.productName));
     }
 
-    public static void DoBuildAndroid(String buildPath) {
-        if (Directory.Exists(apkPath)) {
+    public static void DoBuildAndroid(String buildPath)
+    {
+        if (Directory.Exists(apkPath))
+        {
             Directory.Delete(apkPath, true);
         }
-        if (Directory.Exists(androidExportPath)) {
+        if (Directory.Exists(androidExportPath))
+        {
             Directory.Delete(androidExportPath, true);
         }
 
         EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
 
-        var options = BuildOptions.AcceptExternalModificationsToPlayer;
+        //var options = BuildOptions.AcceptExternalModificationsToPlayer;
+#if UNITY_ANDROID
+        var options = BuildOptions.AllowDebugging;
+        EditorUserBuildSettings.exportAsGoogleAndroidProject = true;
+#elif UNITY_IOS
+        var options = BuildOptions.AllowDebugging;
+#else
+        var options = BuildOptions.None;
+#endif
         var report = BuildPipeline.BuildPlayer(
             GetEnabledScenes(),
             apkPath,
@@ -48,7 +62,8 @@ public class Build : MonoBehaviour {
             options
         );
 
-        if (report.summary.result != BuildResult.Succeeded) {
+        if (report.summary.result != BuildResult.Succeeded)
+        {
             throw new Exception("Build failed");
         }
 
@@ -75,14 +90,16 @@ public class Build : MonoBehaviour {
     }
 
     [MenuItem("ReactNative/Export IOS (Unity 2019.3.*) %&i", false, 3)]
-    public static void DoBuildIOS() {
-        if (Directory.Exists(iosExportPath)) {
+    public static void DoBuildIOS()
+    {
+        if (Directory.Exists(iosExportPath))
+        {
             Directory.Delete(iosExportPath, true);
         }
 
         EditorUserBuildSettings.iOSBuildConfigType = iOSBuildType.Release;
 
-        var options = BuildOptions.AcceptExternalModificationsToPlayer;
+        var options = BuildOptions.None; //BuildOptions.AcceptExternalModificationsToPlayer;
         var report = BuildPipeline.BuildPlayer(
             GetEnabledScenes(),
             iosExportPath,
@@ -90,12 +107,14 @@ public class Build : MonoBehaviour {
             options
         );
 
-        if (report.summary.result != BuildResult.Succeeded) {
+        if (report.summary.result != BuildResult.Succeeded)
+        {
             throw new Exception("Build failed");
         }
     }
 
-    static void Copy(string source, string destinationPath) {
+    static void Copy(string source, string destinationPath)
+    {
         if (Directory.Exists(destinationPath))
             Directory.Delete(destinationPath, true);
 
@@ -110,7 +129,8 @@ public class Build : MonoBehaviour {
             File.Copy(newPath, newPath.Replace(source, destinationPath), true);
     }
 
-    static string[] GetEnabledScenes() {
+    static string[] GetEnabledScenes()
+    {
         var scenes = EditorBuildSettings.scenes
             .Where(s => s.enabled)
             .Select(s => s.path)
