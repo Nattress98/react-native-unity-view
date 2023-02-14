@@ -115,6 +115,11 @@ allprojects {
 include ":UnityExport"
 project(":UnityExport").projectDir = file("./UnityExport")
 ```
+3. Add this line to dependencies in `android/app/build.gradle` at the top.
+
+```
+implementation project(':UnityExport')
+```
 
 ##### After Unity Export
 
@@ -145,6 +150,25 @@ int main(int argc, char * argv[]) {
 }
 ```
 
+#### android build
+1. In `UnityExport/build.gradle` add the following lines
+```
+configurations {
+    release
+}
+android {
+    ndkVersion = '19.0.5232133'
+``` 
+and replace :unityLibrary with :UnityExport
+
+```
+    afterEvaluate {
+        if (project(':UnityExport').tasks.findByName('mergeDebugJniLibFolders'))
+            project(':UnityExport').mergeDebugJniLibFolders.dependsOn BuildIl2CppTask
+        if (project(':UnityExport').tasks.findByName('mergeReleaseJniLibFolders'))
+            project(':UnityExport').mergeReleaseJniLibFolders.dependsOn BuildIl2CppTask
+    }
+```
 ## Use in React Native
 
 ### UnityView Props
