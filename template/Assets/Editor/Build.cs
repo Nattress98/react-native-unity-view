@@ -72,6 +72,7 @@ public class Build : MonoBehaviour
         // Modify build.gradle
         var build_file = Path.Combine(androidExportPath, "build.gradle");
         var build_text = File.ReadAllText(build_file);
+        build_text = build_text.Replace("project(':unityLibrary')", "project(':UnityExport')");
         build_text = build_text.Replace("com.android.application", "com.android.library");
         build_text = build_text.Replace("bundle {", "splits {");
         build_text = build_text.Replace("enableSplit = false", "enable false");
