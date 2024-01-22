@@ -1,30 +1,23 @@
 {
-  "name": "@asmadsen/react-native-unity-view",
+  "name": "@nattress98/react-native-unity-view",
   "title": "React Native Unity View",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "Embed Unity Player inside a React Native app",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf dist/ && tsc"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/asmadsen/react-native-unity-view.git",
-    "baseUrl": "https://github.com/asmadsen/react-native-unity-view"
-  },
+  "repository": "git+https://github.com/Nattress98/react-native-unity-view.git",
   "keywords": [
     "react-native"
   ],
-  "author": {
-    "name": "Andreas Storesund Madsen",
-    "email": "andreas@asmadsen.no"
-  },
+  "author": "Andrew Nattress",
   "license": "MIT",
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
-    "react": "^16.8.1",
+    "react": ">=16.8.1",
     "react-native": ">=0.60.0"
   },
   "devDependencies": {
